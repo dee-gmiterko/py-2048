@@ -52,12 +52,7 @@ Game.SIZE = options.size
 
 print "You can use flags to change simulation properties, look into --help"
 
-"""
-    Precalculated values for quick statistics
-"""
-randomStrategyStats = None
-simpleStrategyStats = None
-predictableStrategyStats = None
+strategiesStats = []
 predictableStrategyLevelsStats = None
 
 def printStats(attempt=None, stats = None):
@@ -81,6 +76,7 @@ if options.random or options.all:
         stats = game.getStats()
         printStats(i + 1, stats)
         randomStrategyStats.append(stats)
+    strategiesStats.append(("Random strategy", randomStrategyStats))
 
 if options.simple or options.all:
     print
@@ -95,6 +91,7 @@ if options.simple or options.all:
         stats = game.getStats()
         printStats(i + 1, stats)
         simpleStrategyStats.append(stats)
+    strategiesStats.append(("Simple strategy", simpleStrategyStats))
 
 if options.predictable or options.all:
     print
@@ -109,6 +106,7 @@ if options.predictable or options.all:
         stats = game.getStats()
         printStats(i + 1, stats)
         predictableStrategyStats.append(stats)
+    strategiesStats.append(("Predictable strategy", predictableStrategyStats))
 
 if options.levels:
     print
@@ -136,39 +134,39 @@ if options.visual:
 
     #display graph
     import plotStyle
-
-    plots = 0
-    if randomStrategyStats:
-        plots += 1
-    if simpleStrategyStats:
-        plots += 1
-    if predictableStrategyStats:
-        plots += 1
     
-    if plots > 0:
+    if len(strategiesStats) > 0:
         plt.figure(1)
-        currentSubplot = 1
         
-        if randomStrategyStats:
-            plotStyle.subplotStyle(plt.subplot(300 + 10 * plots + currentSubplot))
-            plt.title('Random strategy')
-            plt.plot(randomStrategyStats, 'o:')
-            plt.ylim((0, 160000))
-            currentSubplot += 1
+        namesPerStrategy = []
+        movesPerStrategy = []
+        scorePerStrategy = []
+        largestTilePerStragegy = []
+        
+        for strategiesStat in strategiesStats:
+            strategyName, stats = strategiesStat
+            mean = numpy.mean(stats, axis=0)
+            
+            moves, score, largestTile = mean
+            
+            namesPerStrategy.append(strategyName)
+            movesPerStrategy.append(moves)
+            scorePerStrategy.append(score)
+            largestTilePerStragegy.append(largestTile)
+        
+        xses = numpy.arange(len(movesPerStrategy))
+        
+        plotStyle.subplotStyle(plt.subplot(131))
+        plt.title('Moves')
+        plt.bar(xses, movesPerStrategy, color=plotStyle.tableau20, tick_label=namesPerStrategy, align="center")
 
-        if simpleStrategyStats:
-            plotStyle.subplotStyle(plt.subplot(300 + 10 * plots + currentSubplot))
-            plt.title('Simple strategy')
-            plt.plot(simpleStrategyStats, 'o:')
-            plt.ylim((0, 160000))
-            currentSubplot += 1
+        plotStyle.subplotStyle(plt.subplot(132))
+        plt.title('Score')
+        plt.bar(xses, scorePerStrategy, color=plotStyle.tableau20, tick_label=namesPerStrategy, align="center")
 
-        if predictableStrategyStats:
-            plotStyle.subplotStyle(plt.subplot(300 + 10 * plots + currentSubplot))
-            plt.title('Predictable strategy')
-            plt.plot(predictableStrategyStats, 'o:')
-            plt.ylim((0, 160000))
-            currentSubplot += 1
+        plotStyle.subplotStyle(plt.subplot(133))
+        plt.title('Largest tile')
+        plt.bar(xses, largestTilePerStragegy, color=plotStyle.tableau20, tick_label=namesPerStrategy, align="center")
 
         plotStyle.style(plt)
 

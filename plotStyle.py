@@ -21,8 +21,6 @@ def subplotStyle(plot):
 
     plot.get_xaxis().set_ticks_position('none')    
     plot.get_yaxis().set_ticks_position('none')
-    plot.get_xaxis().set_label_text("pokus")
-    plot.get_yaxis().set_label_text("skore")
     
     plot.get_yaxis().grid(True)
 
