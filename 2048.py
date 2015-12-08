@@ -34,22 +34,31 @@ parser.add_option("-t", "--tests",
                   metavar="NUMBER", type="int",
                   dest="tests", default=TESTS_COUNT,
                   help="Change count of tests runned")
+parser.add_option("-d", "--display",
+                  action="store_true", dest="display", default=False,
+                  help="Display map after every turn")
+parser.add_option("-S", "--size",
+                  metavar="NUMBER", type="int",
+                  dest="size", default=Game.SIZE,
+                  help="Change count of tests runned")
 parser.add_option("-q", "--quiet",
                   action="store_false", dest="visual", default=True,
                   help="Don't print visualization of results")
 
 options, optionsValues = parser.parse_args()
 TESTS_COUNT = options.tests
+Game.DEBUG = options.display
+Game.SIZE = options.size
 
 print "You can use flags to change simulation properties, look into --help"
 
 """
-    Calculated values for quick statistics
+    Precalculated values for quick statistics
 """
-randomStrategyStats = [(305, 5112, 512), (313, 5204, 512), (347, 5712, 512), (136, 1436, 128), (258, 3408, 256), (742, 15000, 1024), (353, 5812, 512), (227, 3104, 256), (172, 2272, 256), (298, 4088, 256)]
-simpleStrategyStats = [(408, 6872, 512), (1446, 34264, 2048), (241, 3156, 256), (1230, 27600, 2048), (864, 17044, 1024), (464, 7764, 512), (618, 12152, 1024), (675, 13636, 1024), (1062, 23952, 2048), (525, 8580, 512)]
-predictableStrategyStats = [(2881, 75860, 4096), (2959, 77424, 4096), (4499, 129168, 8192), (4106, 120940, 8192), (5924, 171736, 8192), (5776, 168328, 8192), (5205, 152296, 8192), (5810, 169704, 8192), (3664, 109144, 8192), (5810, 169232, 8192)]
-predictableStrategyLevelsStats = [(3009, 77904, 4096), (2303, 59204, 4096), (5672, 167468, 8192), (3657, 108616, 8192), (5866, 170240, 8192), (4416, 127852, 8192), (8131, 262176, 16384), (4096, 120352, 8192), (1549, 35508, 2048), (4365, 127308, 8192), (3003, 78004, 4096), (3587, 107420, 8192), (2946, 77596, 4096), (2990, 78220, 4096), (5716, 167580, 8192), (3016, 78200, 4096)]
+randomStrategyStats = None
+simpleStrategyStats = None
+predictableStrategyStats = None
+predictableStrategyLevelsStats = None
 
 def printStats(attempt=None, stats = None):
     if attempt is not None:
@@ -125,52 +134,75 @@ if options.visual:
     import matplotlib.pyplot as plt
     import numpy
 
-    plt.figure(1)
-    plt.subplot(131)
-    plt.title('Random strategy')
-    plt.plot(randomStrategyStats, 'o:')
-    plt.ylim((0, 160000))
+    #display graph
+    import plotStyle
 
-    plt.subplot(132)
-    plt.title('Simple strategy')
-    plt.plot(simpleStrategyStats, 'o:')
-    plt.ylim((0, 160000))
-
-    plt.subplot(133)
-    plt.title('Predictable strategy')
-    plt.plot(predictableStrategyStats, 'o:')
-    plt.ylim((0, 160000))
-
-    try:
-        mng = plt.get_current_fig_manager()
-        mng.window.state('zoomed')
-    except:
-        print "Unexpected error.."
+    plots = 0
+    if randomStrategyStats:
+        plots += 1
+    if simpleStrategyStats:
+        plots += 1
+    if predictableStrategyStats:
+        plots += 1
     
-    plt.show()
+    if plots > 0:
+        plt.figure(1)
+        currentSubplot = 1
+        
+        if randomStrategyStats:
+            plotStyle.subplotStyle(plt.subplot(300 + 10 * plots + currentSubplot))
+            plt.title('Random strategy')
+            plt.plot(randomStrategyStats, 'o:')
+            plt.ylim((0, 160000))
+            currentSubplot += 1
 
-    fig = plt.figure(2)
+        if simpleStrategyStats:
+            plotStyle.subplotStyle(plt.subplot(300 + 10 * plots + currentSubplot))
+            plt.title('Simple strategy')
+            plt.plot(simpleStrategyStats, 'o:')
+            plt.ylim((0, 160000))
+            currentSubplot += 1
 
-    predictableStrategyLevelsAvgStats = []
-    predictableStrategyLevelsAvgStats.append(0)
-    for level in xrange(1, 5):
-        a = 0
-        for i in xrange(4):
-            m, n, s = predictableStrategyLevelsStats[(level-1) * 3 + i]
-            a += s
-        predictableStrategyLevelsAvgStats.append(a / 3)
+        if predictableStrategyStats:
+            plotStyle.subplotStyle(plt.subplot(300 + 10 * plots + currentSubplot))
+            plt.title('Predictable strategy')
+            plt.plot(predictableStrategyStats, 'o:')
+            plt.ylim((0, 160000))
+            currentSubplot += 1
 
-    plt.title('Predictable strategy levels')
-    plt.plot(predictableStrategyLevelsAvgStats, '-')
-    plt.grid()
-    
-    ax = fig.gca()
-    ax.set_xticks(numpy.arange(0,5,1))
-    
-    try:
-        mng = plt.get_current_fig_manager()
-        mng.window.state('zoomed')
-    except:
-        print "Unexpected error.."
-    
-    plt.show()
+        plotStyle.style(plt)
+
+        try:
+            mng = plt.get_current_fig_manager()
+            mng.window.state('zoomed')
+        except:
+            print "Unexpected error.."
+
+        plt.show()
+
+    if predictableStrategyLevelsStats:
+        fig = plt.figure(2)
+
+        predictableStrategyLevelsAvgStats = []
+        predictableStrategyLevelsAvgStats.append(0)
+        for level in xrange(1, 5):
+            a = 0
+            for i in xrange(4):
+                m, n, s = predictableStrategyLevelsStats[(level-1) * 3 + i]
+                a += s
+            predictableStrategyLevelsAvgStats.append(a / 3)
+
+        plt.title('Predictable strategy levels')
+        plt.plot(predictableStrategyLevelsAvgStats, '-')
+        plt.grid()
+
+        ax = fig.gca()
+        ax.set_xticks(numpy.arange(0,5,1))
+
+        try:
+            mng = plt.get_current_fig_manager()
+            mng.window.state('zoomed')
+        except:
+            print "Unexpected error.."
+
+        plt.show()

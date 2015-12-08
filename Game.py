@@ -12,18 +12,18 @@ class Game:
     
     SIZE = 5
     DEBUG = False
-    DEBUG_STEP_BY_STEP = False
     
     RESULT_MOVED = 0
     RESULT_NOT_MOVED = 1
     RESULT_GAME_OVER = 2
     
-    map = None
-    statsMoves = 0
-    statsScore = 0
-    
     def __init__(self, ):
         self.map = [[0 for x in range(self.SIZE)] for x in range(self.SIZE)] 
+        
+        self.statsMoves = 0
+        self.statsScore = 0
+        self.pushValues = []
+    
         self.spawnTile()
         self.spawnTile()
         
@@ -48,8 +48,6 @@ class Game:
         
             if self.DEBUG:
                 self.printMap()
-                if self.DEBUG_STEP_BY_STEP:
-                    raw_input()
             
             self.spawnTile()
             
@@ -151,8 +149,6 @@ class Game:
                     largestTile = self.map[x][y]
         
         return (self.statsMoves, self.statsScore, largestTile)
-    
-    pushValues = []
     
     def push(self):
         self.pushValues.append((copy.deepcopy(self.map), self.statsMoves, self.statsScore))

@@ -5,7 +5,7 @@ Program is simulating playing of game [2048](http://2048game.com/). There are av
 At each turn is choosen one random side to slide.
 #### Simple
 If there are two number in row or column that can be connected this turn will be used. If there arent any random turn is used instead.
-#### Stragery thinking few turns to future
+#### Stragery thinking few turns ahead
 This strategy calculates score for each possible turn, best turn will be used. Because this strategy checks few steps to future, it is able to connect some numbers even in few turns.
 
 ### Usage
