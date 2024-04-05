@@ -1,11 +1,6 @@
-#!/usr/bin/env python
-# coding=utf-8
-
 from RandomStrategy import RandomStrategy
 from random import randint
-import math
-import copy
-                            
+              
 class SimpleStrategy(RandomStrategy):
     """
     SimpleStrategy for Game 2048 

@@ -11,7 +11,7 @@ from SimpleStrategy import SimpleStrategy
 Game simulations
 """
 
-TESTS_COUNT = 10
+TESTS_COUNT = 20
 
 
 parser = OptionParser()
@@ -50,25 +50,25 @@ TESTS_COUNT = options.tests
 Game.DEBUG = options.display
 Game.SIZE = options.size
 
-print "You can use flags to change simulation properties, look into --help"
+print("You can use flags to change simulation properties, look into --help")
 
 strategiesStats = []
 predictableStrategyLevelsStats = None
 
 def printStats(attempt=None, stats = None):
     if attempt is not None:
-        print str(attempt) + '.',
+        print(str(attempt) + '.', end=' ')
     if stats is not None:
-        print 'moves:', str(stats[0]).ljust(7, ' '),
-        print 'score:', str(stats[1]).ljust(7, ' '),
-        print 'largest:', str(stats[2]).ljust(7, ' ')
+        print('moves:', str(stats[0]).ljust(7, ' '), end=' ')
+        print('score:', str(stats[1]).ljust(7, ' '), end=' ')
+        print('largest:', str(stats[2]).ljust(7, ' '))
 
 if options.random or options.all:
-    print
-    print 'Random strategy:'
+    print()
+    print('Random strategy:')
 
     randomStrategyStats = []
-    for i in xrange(TESTS_COUNT):
+    for i in range(TESTS_COUNT):
         game = Game()
         randomStrategy = RandomStrategy(game)
         randomStrategy.play()
@@ -79,11 +79,11 @@ if options.random or options.all:
     strategiesStats.append(("Random strategy", randomStrategyStats))
 
 if options.simple or options.all:
-    print
-    print 'Simple strategy:'
+    print()
+    print('Simple strategy:')
 
     simpleStrategyStats = []
-    for i in xrange(TESTS_COUNT):
+    for i in range(TESTS_COUNT):
         game = Game()
         simpleStrategy = SimpleStrategy(game)
         simpleStrategy.play()
@@ -94,11 +94,11 @@ if options.simple or options.all:
     strategiesStats.append(("Simple strategy", simpleStrategyStats))
 
 if options.predictable or options.all:
-    print
-    print 'Predictable strategy'
+    print()
+    print('Predictable strategy')
 
     predictableStrategyStats = []
-    for i in xrange(TESTS_COUNT):
+    for i in range(TESTS_COUNT):
         game = Game()
         predictableStrategy = PredictableStrategy(game)
         predictableStrategy.play()
@@ -109,13 +109,13 @@ if options.predictable or options.all:
     strategiesStats.append(("Predictable strategy", predictableStrategyStats))
 
 if options.levels:
-    print
-    print 'Predictable strategy levels'
+    print()
+    print('Predictable strategy levels')
 
     predictableStrategyLevelsStats = []
-    for level in xrange(1, 5):
-        print 'Level ' + str(level)
-        for i in xrange(TESTS_COUNT):
+    for level in range(1, 5):
+        print('Level ' + str(level))
+        for i in range(TESTS_COUNT):
             game = Game()
             predictableStrategy = PredictableStrategy(game)
             predictableStrategy.PREDICTION_LEVELS = level
@@ -174,7 +174,7 @@ if options.visual:
             mng = plt.get_current_fig_manager()
             mng.window.state('zoomed')
         except:
-            print "Unexpected error.."
+            print("Unexpected error..")
 
         plt.show()
 
@@ -183,9 +183,9 @@ if options.visual:
 
         predictableStrategyLevelsAvgStats = []
         predictableStrategyLevelsAvgStats.append(0)
-        for level in xrange(1, 5):
+        for level in range(1, 5):
             a = 0
-            for i in xrange(4):
+            for i in range(4):
                 m, n, s = predictableStrategyLevelsStats[(level-1) * 3 + i]
                 a += s
             predictableStrategyLevelsAvgStats.append(a / 3)
@@ -201,6 +201,6 @@ if options.visual:
             mng = plt.get_current_fig_manager()
             mng.window.state('zoomed')
         except:
-            print "Unexpected error.."
+            print("Unexpected error..")
 
         plt.show()

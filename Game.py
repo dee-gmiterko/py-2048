@@ -37,8 +37,8 @@ class Game:
         fy = self.SIZE-1 if slideY > 0 else 0
         tx = 0-1 if slideX > 0 else self.SIZE
         ty = 0-1 if slideY > 0 else self.SIZE
-        for x in xrange(fx, tx, -1 if fx > tx else 1):
-            for y in xrange(fy, ty, -1 if fy > ty else 1):
+        for x in range(fx, tx, -1 if fx > tx else 1):
+            for y in range(fy, ty, -1 if fy > ty else 1):
                 if self.slideTile(x, y, slideX, slideY):
                     moved = True
         
@@ -123,14 +123,14 @@ class Game:
         return True
     
     def printMap(self):
-        print #empty line
+        print() #empty line
         self.printMapTableLine()  
         
         for y in range(0, self.SIZE):
             line = '|'
             for x in range(0, self.SIZE):
                 line += str(self.map[x][y]).ljust(4, ' ') + '|'
-            print line
+            print(line)
             
             self.printMapTableLine()
         
@@ -138,7 +138,7 @@ class Game:
         line = '+'
         for i in range(0, self.SIZE):
             line += '----+'
-        print line
+        print(line)
     
     def getStats(self):
         largestTile = 0

@@ -1,9 +1,5 @@
-#!/usr/bin/env python
-# coding=utf-8
-
 from SimpleStrategy import SimpleStrategy
 from random import randint
-
                             
 class PredictableStrategy(SimpleStrategy):
     """
